@@ -1,0 +1,178 @@
+<!-- <app-navbar></app-navbar> -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+<nav class="navbar navbar-expand-lg navbar-light px-4">
+    <a class="navbar-brand d-flex align-items-center" href="#">
+      <img src="assets/logo3.png" alt="WisVest Logo" class="logo-img" />
+      WisVest
+    </a>
+    <div class="ms-auto d-flex gap-3">
+        <button class="btn btn-outline-primary btn-rounded"  (click)="home()">Home</button>
+      <a routerLink="/products" class="btn btn-outline-success btn-rounded" (click)="products()">Products</a>
+      <button class="btn btn-danger btn-rounded" (click)="logout()">Logout</button>
+    </div>
+  </nav>
+<section class="pt-4 pb-5">
+  <div class="container">
+    <div class="form-card">
+      <h2>Enter Your Investment Details</h2>
+      <form [formGroup]="investmentForm" (ngSubmit)="onSubmit()">
+        <div class="form-group">
+          <!-- Goal Field -->
+          <img src="/goal.jpg" alt="Goal Icon" class="input-icon" />
+          <div class="input-wrapper">
+            <label for="goal" class="form-label">Goal</label>
+            <select
+              class="form-select no-scroll"
+              id="goal"
+              formControlName="goal"
+              aria-label="Select your investment goal"
+              [ngClass]="{'is-invalid': investmentForm.get('goal')?.invalid && investmentForm.get('goal')?.touched, 'is-valid': investmentForm.get('goal')?.valid}"
+            >
+              <option selected disabled value="">Select your goal</option>
+              <option value="Emergency Fund">Emergency Fund</option>
+              <option value="Retirement">Retirement</option>
+              <option value="Wealth Accumulation">Wealth Accumulation</option>
+              <option value="Child's Education">Child's Education</option>
+              <option value="Big Purchase">Big Purchase</option>
+            </select>
+            <div *ngIf="investmentForm.get('goal')?.invalid && investmentForm.get('goal')?.touched">
+              <small>Goal is required.</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <!-- Age Field -->
+          <img src="/age.webp" alt="Age Icon" class="input-icon" />
+          <div class="input-wrapper">
+            <label for="age" class="form-label">Age</label>
+            <input
+              type="number"
+              class="form-control"
+              id="age"
+              formControlName="age"
+              min="18"
+              max="100"
+              placeholder="Enter age (18 - 100)"
+              aria-label="Age input field. Enter your age between 18 and 100."
+              [ngClass]="{'is-invalid': investmentForm.get('age')?.invalid && investmentForm.get('age')?.touched, 'is-valid': investmentForm.get('age')?.valid}"
+            />
+            <div *ngIf="investmentForm.get('age')?.invalid && investmentForm.get('age')?.touched">
+              <small *ngIf="investmentForm.get('age')?.errors?.['required']">Age is required.</small>
+              <small *ngIf="investmentForm.get('age')?.errors?.['min']">Minimum age is 18.</small>
+              <small *ngIf="investmentForm.get('age')?.errors?.['max']">Maximum age is 100.</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <!-- Investment Horizon -->
+          <img src="/horizon.jfif" alt="Horizon Icon" class="input-icon" />
+          <div class="input-wrapper">
+            <label class="form-label">Investment Horizon</label>
+            <div class="horizon-buttons" role="group" aria-label="Investment Horizon">
+              <button
+                type="button"
+                class="btn btn-outline-primary"
+                [ngClass]="{'active': investmentForm.get('horizonType')?.value === 'Short'}"
+                (click)="selectHorizon('Short')"
+                title="1–3 years"
+                aria-label="Short investment horizon, 1 to 3 years"
+              >
+                Short
+              </button>
+              <button
+                type="button"
+                class="btn btn-outline-secondary"
+                [ngClass]="{'active': investmentForm.get('horizonType')?.value === 'Moderate'}"
+                (click)="selectHorizon('Moderate')"
+                title="3–7 years"
+                aria-label="Moderate investment horizon, 3 to 7 years"
+              >
+                Moderate
+              </button>
+              <button
+                type="button"
+                class="btn btn-outline-success"
+                [ngClass]="{'active': investmentForm.get('horizonType')?.value === 'Long'}"
+                (click)="selectHorizon('Long')"
+                title="7+ years"
+                aria-label="Long-term investment horizon, more than 7 years"
+              >
+                Long
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <!-- Risk Tolerance -->
+          <img src="/risk1.jpg" alt="Risk Icon" class="input-icon" />
+          <div class="input-wrapper">
+            <label class="form-label">Risk Tolerance</label>
+            <div class="risk-buttons" role="group" aria-label="Risk Tolerance">
+              <button
+                type="button"
+                class="btn btn-outline-success"
+                [ngClass]="{'active': investmentForm.get('riskLevel')?.value === 'Low'}"
+                (click)="selectRisk('Low')"
+                aria-label="Low risk investment option"
+              >
+                Low
+              </button>
+              <button
+                type="button"
+                class="btn btn-outline-warning"
+                [ngClass]="{'active': investmentForm.get('riskLevel')?.value === 'Medium'}"
+                (click)="selectRisk('Medium')"
+                aria-label="Medium risk investment option"
+              >
+                Medium
+              </button>
+              <button
+                type="button"
+                class="btn btn-outline-danger"
+                [ngClass]="{'active': investmentForm.get('riskLevel')?.value === 'High'}"
+                (click)="selectRisk('High')"
+                aria-label="High risk investment option"
+              >
+                High
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <!-- Target Amount Field -->
+          <img src="/tamt.jpg" alt="Target Amount Icon" class="input-icon" />
+          <div class="input-wrapper">
+            <label for="targetAmount" class="form-label">Target Amount</label>
+            <input
+              type="number"
+              class="form-control no-scroll"
+              id="targetAmount"
+              formControlName="amount"
+              min="10000"
+              step="1"
+              placeholder="Enter amount (numbers only)"
+              aria-label="Enter your target investment amount, minimum 10,000"
+              [ngClass]="{'is-invalid': investmentForm.get('amount')?.invalid && investmentForm.get('amount')?.touched, 'is-valid': investmentForm.get('amount')?.valid}"
+            />
+            <div *ngIf="investmentForm.get('amount')?.invalid && investmentForm.get('amount')?.touched">
+              <small>Target amount is required and must be at least 10000.</small>
+            </div>
+          </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="form-group mt-3">
+          <button type="submit" class="btn btn-green" [disabled]="investmentForm.invalid" aria-label="Submit your investment details">
+            Submit
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
